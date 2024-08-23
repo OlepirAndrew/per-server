@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { PerformersService } from './performers.service';
 
-@Controller('performers')
+@Controller('/performers')
 export class PerformersController {
   constructor(private performersService: PerformersService) {}
 
