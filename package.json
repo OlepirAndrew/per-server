@@ -23,10 +23,12 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/sequelize": "^10.0.1",
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/swagger": "^7.4.0",
+    "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
@@ -37,6 +39,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

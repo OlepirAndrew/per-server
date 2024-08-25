@@ -8,6 +8,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { AdminMod } from './admin/admin.model';
+import { CryptModule } from './crypt/crypt.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AdminMod } from './admin/admin.model';
       autoLoadModels: true,
     }),
     AdminModule,
+    CryptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
