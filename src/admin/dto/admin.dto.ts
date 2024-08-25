@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateAdminDto {
+export class AdminDto {
   @ApiProperty({ example: 'admin.name', description: 'unique name' })
-  readonly name: string;
+  name: string;
   @ApiProperty({ example: 'admin.name@email.com', description: 'unique email' })
-  readonly email: string;
+  email: string;
   @ApiProperty({ example: '12345qwerty', description: 'unique password' })
-  readonly password: string;
+  password: string;
 }
