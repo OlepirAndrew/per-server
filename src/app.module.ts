@@ -7,7 +7,8 @@ import { PerformersModule } from './performers/performers.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
-import { AdminMod } from './admin/admin.model';
+import { AdminMod } from './admin/model/admin.model';
+import { CryptModule } from './crypt/crypt.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminMod } from './admin/admin.model';
     }),
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
@@ -30,6 +32,7 @@ import { AdminMod } from './admin/admin.model';
       autoLoadModels: true,
     }),
     AdminModule,
+    CryptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
