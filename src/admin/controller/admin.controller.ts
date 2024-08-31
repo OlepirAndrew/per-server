@@ -1,10 +1,13 @@
 import {
   Body,
   Controller,
-  Get, Param,
-  Post, Put,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
   Session,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { AdminService } from '../service/admin.service';
 import { AdminDto } from '../dto/admin.dto';
@@ -39,7 +42,11 @@ export class AdminController {
 
   @Post('/admins/registration')
   registration(@Body() dto: AdminDto) {
-    console.log('registration', dto);
     return this.adminService.registration(dto);
+  }
+
+  @Delete('/admins/:id/delete')
+  deleteAdmin(@Param('id') id: string) {
+    return this.adminService.deleteAdmin(id);
   }
 }

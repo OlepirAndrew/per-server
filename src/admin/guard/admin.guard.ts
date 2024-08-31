@@ -20,8 +20,6 @@ export class AdminGuard implements CanActivate {
     try {
       const [bearer, token] = req.headers.authorization.split(' ');
 
-      console.log(bearer, token);
-
       if (bearer !== 'Bearer' || !token) {
         this.redirectToLogin(res, 'User is not authorized');
       }
@@ -43,8 +41,6 @@ export class AdminGuard implements CanActivate {
   }
 
   private redirectToLogin(res: Response, message: string): never {
-    console.log('message', message);
-
     res.redirect(302, 'http://localhost:4400/admin-login');
     this.throwUnauthorizedException(message);
   }
