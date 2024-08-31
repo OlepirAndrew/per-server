@@ -17,7 +17,11 @@ export class AdminService {
   ) {}
 
   async getAll() {
-    const admins: AdminMod[] = await this.adminRepository.findAll();
+    const admins: AdminMod[] = await this.adminRepository.findAll({
+      attributes: {
+        exclude: ['password'],
+      },
+    });
 
     return admins;
   }
@@ -31,6 +35,7 @@ export class AdminService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    await this.checkUniqueEmailName(dto);
 
     const hashedPassword = await this.cryptService.getHashedPassword(dto);
     const createdAdmin: AdminMod = await this.create({
@@ -38,7 +43,10 @@ export class AdminService {
       password: hashedPassword,
     });
     createdAdmin.password = undefined;
-    return createdAdmin;
+    return {
+      status: HttpStatus.OK,
+      message: 'Registration successful',
+    };
   }
 
   async create(adminData: AdminDto) {
@@ -49,6 +57,39 @@ export class AdminService {
     return this.adminRepository.findOne({
       where: { email },
     });
+  }
+
+  private async getByName(name: string) {
+    return this.adminRepository.findOne({
+      where: { name },
+    });
+  }
+
+  getById(id: string) {
+    return this.adminRepository.findOne({
+      where: { id },
+      attributes: {
+        exclude: ['password'],
+      },
+    });
+  }
+
+  private async checkUniqueEmailName(dto: AdminDto) {
+    const candidateByEmail = await this.getByEmail(dto.email);
+    if (candidateByEmail) {
+      throw new HttpException(
+        'User with that email already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const candidateByName = await this.getByName(dto.name);
+    if (candidateByName) {
+      throw new HttpException(
+        'User with that name already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   private async generateToken(admin: AdminMod) {
@@ -72,6 +113,7 @@ export class AdminService {
     if (!hashedAdmin) {
       throw new UnauthorizedException({
         message: 'Email Address is not Registered',
+        status: HttpStatus.UNAUTHORIZED,
       });
     }
 
@@ -84,12 +126,9 @@ export class AdminService {
       return hashedAdmin;
     }
 
-    throw new UnauthorizedException({ message: 'Invalid email or password' });
-  }
-
-  getById(id: string) {
-    return this.adminRepository.findOne({
-      where: { id },
+    throw new UnauthorizedException({
+      message: 'Invalid email or password',
+      status: HttpStatus.UNAUTHORIZED,
     });
   }
 
@@ -100,13 +139,32 @@ export class AdminService {
       throw new HttpException('Admin not found', HttpStatus.NOT_FOUND);
     }
 
+    await this.checkUniqueEmailName(dto);
+
     if (dto.password) {
       dto.password = await this.cryptService.getHashedPassword(dto);
     }
 
     await admin.update(dto);
-    admin.password = undefined; // Do not return password in response
 
-    return admin;
+    return {
+      status: HttpStatus.OK,
+      message: 'Editing successful',
+    };
+  }
+
+  async deleteAdmin(id: string) {
+    const admin = await this.getById(id);
+
+    if (!admin) {
+      throw new HttpException('Admin not found', HttpStatus.NOT_FOUND);
+    }
+
+    await admin.destroy();
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Admin deleted successfully',
+    };
   }
 }
