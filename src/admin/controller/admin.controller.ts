@@ -5,9 +5,9 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, Query,
   Session,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { AdminService } from '../service/admin.service';
 import { AdminDto } from '../dto/admin.dto';
@@ -26,8 +26,8 @@ export class AdminController {
   // }
 
   @Get('/admins')
-  getAll() {
-    return this.adminService.getAll();
+  getAll(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.adminService.getAll(page, limit);
   }
 
   @Get('/admins/:id')
