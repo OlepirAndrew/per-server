@@ -20,27 +20,15 @@ export class AdminService {
 
     const offset = (page - 1) * limit; // Смещение для пагинации
 
-    const {
-      rows: admins,
-      count: totalItems
+    const { rows: admins, count: totalItems
     } = await this.adminRepository.findAndCountAll({
       attributes: { exclude: ['password']}, limit, offset,
     })
 
-    const totalPages = Math.ceil(totalItems / limit);
-
-    const hasPreviousPage = page > 1;
-    const hasNextPage = page < totalPages;
-
    const adminItems = {
      admins,
      meta: {
-       page,
-       take: limit,
        itemCount: totalItems,
-       pageCount: totalPages,
-       hasPreviousPage,
-       hasNextPage,
      },
    }
 
@@ -133,7 +121,7 @@ export class AdminService {
 
     if (!hashedAdmin) {
       throw new UnauthorizedException({
-        message: 'Email Address is not Registered',
+        message: 'Invalid email or password',
         status: HttpStatus.UNAUTHORIZED,
       });
     }
@@ -160,13 +148,24 @@ export class AdminService {
       throw new HttpException('Admin not found', HttpStatus.NOT_FOUND);
     }
 
-    await this.checkUniqueEmailName(dto);
+    const updateData: Partial<AdminDto> = {};
 
+    if (dto.email && dto.email !== admin.email) {
+      updateData.email = dto.email;
+    }
+    if (dto.name && dto.name !== admin.name) {
+      updateData.name = dto.name;
+    }
     if (dto.password) {
-      dto.password = await this.cryptService.getHashedPassword(dto);
+      const hashedPassword = await this.cryptService.getHashedPassword(dto);
+      if (hashedPassword !== admin.password) {
+        updateData.password = hashedPassword;
+      }
     }
 
-    await admin.update(dto);
+    if (Object.keys(updateData).length > 0) {
+      await admin.update(updateData);
+    }
 
     return {
       status: HttpStatus.OK,
