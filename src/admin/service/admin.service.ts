@@ -16,14 +16,35 @@ export class AdminService {
     private cryptService: CryptService,
   ) {}
 
-  async getAll() {
-    const admins: AdminMod[] = await this.adminRepository.findAll({
-      attributes: {
-        exclude: ['password'],
-      },
-    });
+  async getAll(page: number = 1, limit: number = 20) {
 
-    return admins;
+    const offset = (page - 1) * limit; // Смещение для пагинации
+
+    const {
+      rows: admins,
+      count: totalItems
+    } = await this.adminRepository.findAndCountAll({
+      attributes: { exclude: ['password']}, limit, offset,
+    })
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const hasPreviousPage = page > 1;
+    const hasNextPage = page < totalPages;
+
+   const adminItems = {
+     admins,
+     meta: {
+       page,
+       take: limit,
+       itemCount: totalItems,
+       pageCount: totalPages,
+       hasPreviousPage,
+       hasNextPage,
+     },
+   }
+
+    return adminItems;
   }
 
   async registration(dto: AdminDto) {
