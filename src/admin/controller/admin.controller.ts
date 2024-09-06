@@ -5,9 +5,10 @@ import {
   Get,
   Param,
   Post,
-  Put, Query,
+  Put,
+  Query,
   Session,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { AdminService } from '../service/admin.service';
 import { AdminDto } from '../dto/admin.dto';
@@ -26,7 +27,10 @@ export class AdminController {
   // }
 
   @Get('/admins')
-  getAll(@Query('page') page: number, @Query('limit') limit: number) {
+  getAll(
+    @Query('page') page: number,
+    @Query('limit') limit: number
+  ) {
     return this.adminService.getAll(page, limit);
   }
 
@@ -37,7 +41,8 @@ export class AdminController {
 
   @Put('/admins/:id/edit')
   editAdmin(@Param('id') id: string, @Body() dto: AdminDto) {
-    return this.adminService.editAdmin(id, dto);
+
+    return this.adminService.editEntity(id, dto);
   }
 
   @Post('/admins/registration')
@@ -47,6 +52,6 @@ export class AdminController {
 
   @Delete('/admins/:id/delete')
   deleteAdmin(@Param('id') id: string) {
-    return this.adminService.deleteAdmin(id);
+    return this.adminService.delete(id);
   }
 }

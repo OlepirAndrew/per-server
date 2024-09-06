@@ -26,6 +26,8 @@ export class AdminGuard implements CanActivate {
 
       req.user = this.jwtService.verify(token);
 
+      console.log('REQ', req);
+
       return true;
     } catch (error) {
       if (error instanceof TokenExpiredError) {
