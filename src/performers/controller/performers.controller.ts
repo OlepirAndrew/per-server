@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, Put, UseGuards } from '@nestjs/common';
 import { PerformersService } from '../service/performers.service';
 import { PerformerDto } from '../dto/performer.dto';
-import { UpdatePerformerDto } from '../dto/update-performer.dto';
 import { AdminDto } from '../../admin/dto/admin.dto';
 import { AdminGuard } from '../../admin/guard/admin.guard';
 

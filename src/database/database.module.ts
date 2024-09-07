@@ -22,7 +22,7 @@ import { PerformerMod } from '../performers/model/performer.model';
         database: configService.get<string>('POSTGRES_DB'),
         models: [AdminMod, PerformerMod],
         autoLoadModels: true,
-        // synchronize: true,
+        synchronize: true,
         sync: {alter: true}
       }),
     }),
