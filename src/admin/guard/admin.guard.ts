@@ -41,7 +41,7 @@ export class AdminGuard implements CanActivate {
   }
 
   private redirectToLogin(res: Response, message: string): never {
-    res.redirect(302, 'http://localhost:4400/admin-login');
+    res.redirect(302, '/admin-login');
     this.throwUnauthorizedException(message);
   }
 }

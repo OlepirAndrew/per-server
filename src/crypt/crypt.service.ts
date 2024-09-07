@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { AdminDto } from '../admin/dto/admin.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 
@@ -7,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 export class CryptService {
   constructor(private jwtService: JwtService) {}
 
-  async getHashedPassword(dto: AdminDto) {
+  async getHashedPassword<T extends {password: string}>(dto: T) {
     const salt = await bcrypt.genSalt(10);
     return bcrypt.hash(dto.password, salt);
   }

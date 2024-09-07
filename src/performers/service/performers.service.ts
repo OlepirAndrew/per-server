@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { AdminMod } from '../model/admin.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CryptService } from '../../crypt/crypt.service';
+import { PerformerMod } from '../model/performer.model';
 import { EntityService } from '../../shared/entity.abstract.service';
 
 @Injectable()
-export class AdminService extends EntityService<AdminMod>{
+export class PerformersService extends EntityService<PerformerMod>{
   constructor(
-    @InjectModel(AdminMod) private adminRepository: typeof AdminMod,
+    @InjectModel(PerformerMod) private performerRepository: typeof PerformerMod,
     cryptService: CryptService,
   ) {
-    super(adminRepository, cryptService);
+    super(performerRepository, cryptService);
   }
 }
